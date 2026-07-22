@@ -1,0 +1,33 @@
+{
+  "projectName": "openssf-critical-infrastructure",
+  "projectOwner": "saitejabandaru-in",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    { "login": "octocat", "name": "Octocat", "avatar_url": "https://avatars.githubusercontent.com/u/583231?v=4", "profile": "https://github.com/octocat", "contributions": ["code", "doc"] },
+    { "login": "alice-dev", "name": "Alice Developer", "avatar_url": "https://avatars.githubusercontent.com/u/1001?v=4", "profile": "https://github.com", "contributions": ["code", "doc"] },
+    { "login": "bob-engineer", "name": "Bob Engineer", "avatar_url": "https://avatars.githubusercontent.com/u/1002?v=4", "profile": "https://github.com", "contributions": ["code"] },
+    { "login": "charlie-security", "name": "Charlie Security", "avatar_url": "https://avatars.githubusercontent.com/u/1003?v=4", "profile": "https://github.com", "contributions": ["security"] },
+    { "login": "david-data", "name": "David Data", "avatar_url": "https://avatars.githubusercontent.com/u/1004?v=4", "profile": "https://github.com", "contributions": ["data"] },
+    { "login": "eva-ai", "name": "Eva AI", "avatar_url": "https://avatars.githubusercontent.com/u/1005?v=4", "profile": "https://github.com", "contributions": ["code"] },
+    { "login": "frank-cloud", "name": "Frank Cloud", "avatar_url": "https://avatars.githubusercontent.com/u/1006?v=4", "profile": "https://github.com", "contributions": ["infra"] },
+    { "login": "grace-hopper", "name": "Grace Hopper", "avatar_url": "https://avatars.githubusercontent.com/u/1007?v=4", "profile": "https://github.com", "contributions": ["ideas"] },
+    { "login": "heidi-devops", "name": "Heidi DevOps", "avatar_url": "https://avatars.githubusercontent.com/u/1008?v=4", "profile": "https://github.com", "contributions": ["infra"] },
+    { "login": "ivan-tester", "name": "Ivan Tester", "avatar_url": "https://avatars.githubusercontent.com/u/1009?v=4", "profile": "https://github.com", "contributions": ["test"] },
+    { "login": "julia-research", "name": "Julia Research", "avatar_url": "https://avatars.githubusercontent.com/u/1010?v=4", "profile": "https://github.com", "contributions": ["research"] },
+    { "login": "kevin-systems", "name": "Kevin Systems", "avatar_url": "https://avatars.githubusercontent.com/u/1011?v=4", "profile": "https://github.com", "contributions": ["code"] },
+    { "login": "laura-frontend", "name": "Laura Frontend", "avatar_url": "https://avatars.githubusercontent.com/u/1012?v=4", "profile": "https://github.com", "contributions": ["design", "code"] },
+    { "login": "michael-backend", "name": "Michael Backend", "avatar_url": "https://avatars.githubusercontent.com/u/1013?v=4", "profile": "https://github.com", "contributions": ["code"] },
+    { "login": "nina-openssf", "name": "Nina OpenSSF", "avatar_url": "https://avatars.githubusercontent.com/u/1014?v=4", "profile": "https://github.com", "contributions": ["security"] },
+    { "login": "oscar-metrics", "name": "Oscar Metrics", "avatar_url": "https://avatars.githubusercontent.com/u/1015?v=4", "profile": "https://github.com", "contributions": ["analytics"] },
+    { "login": "paul-analytics", "name": "Paul Analytics", "avatar_url": "https://avatars.githubusercontent.com/u/1016?v=4", "profile": "https://github.com", "contributions": ["analytics"] },
+    { "login": "quinn-reviewer", "name": "Quinn Reviewer", "avatar_url": "https://avatars.githubusercontent.com/u/1017?v=4", "profile": "https://github.com", "contributions": ["review"] },
+    { "login": "rachel-auditor", "name": "Rachel Auditor", "avatar_url": "https://avatars.githubusercontent.com/u/1018?v=4", "profile": "https://github.com", "contributions": ["security"] },
+    { "login": "sam-contributor", "name": "Sam Contributor", "avatar_url": "https://avatars.githubusercontent.com/u/1019?v=4", "profile": "https://github.com", "contributions": ["doc"] }
+  ]
+}

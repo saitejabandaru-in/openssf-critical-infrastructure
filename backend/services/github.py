@@ -2,7 +2,6 @@ import os
 import math
 from datetime import datetime, timezone
 import httpx
-from typing import Dict, Any, Tuple
 from backend.models.schemas import CriticalityMetrics, RepoAnalysisResponse
 from backend.core.calculator import OpenSSFCriticalityCalculator
 

@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI, HTTPException, Path
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, PlainTextResponse, JSONResponse
+from fastapi.responses import FileResponse, PlainTextResponse
 from backend.models.schemas import (
     CriticalityMetrics, CriticalityResponse, RepoAnalysisResponse,
     RepoComparisonRequest, RepoComparisonResponse

@@ -1,4 +1,3 @@
-import pytest
 from backend.models.schemas import CriticalityMetrics
 from backend.core.calculator import OpenSSFCriticalityCalculator, CRITICAL_THRESHOLD
 from backend.services.ai_advisor import OpenSSFAIAdvisor

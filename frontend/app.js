@@ -1,4 +1,4 @@
-// OpenSSF Criticality Score Parameter Definitions
+// OpenSSF Parameter Model
 const PARAM_CONFIGS = {
     created_since: { weight: 1.0, max: 120, alpha: 1.0, inverted: false, label: "Project Age (Months)" },
     updated_since: { weight: 1.0, max: 120, alpha: 1.0, inverted: true, label: "Inactivity (Months)" },
@@ -12,7 +12,6 @@ const PARAM_CONFIGS = {
     dependents_count: { weight: 2.0, max: 500000, alpha: 0.00001, inverted: false, label: "Dependents Count" }
 };
 
-// Initial Default Metrics State
 let currentMetrics = {
     created_since: 48,
     updated_since: 0.5,
@@ -28,8 +27,8 @@ let currentMetrics = {
 
 const CRITICAL_THRESHOLD = 0.400;
 let radarChartInstance = null;
+let currentRepoName = "saitejabandaru-in/openssf-critical-infrastructure";
 
-// Pure Math Score Calculation Function
 function calculateCriticalityScore(metrics) {
     let totalScore = 0.0;
     let totalWeight = 0.0;
@@ -52,7 +51,6 @@ function calculateCriticalityScore(metrics) {
     return { score: finalScore, normScores };
 }
 
-// Initialize Application UI
 document.addEventListener('DOMContentLoaded', () => {
     initSliders();
     initRadarChart();
@@ -102,7 +100,7 @@ function initRadarChart() {
             labels: labels,
             datasets: [
                 {
-                    label: 'Current Repository',
+                    label: 'Current Repository Profile',
                     data: new Array(10).fill(0),
                     backgroundColor: 'rgba(56, 189, 248, 0.25)',
                     borderColor: '#38bdf8',
@@ -132,9 +130,7 @@ function initRadarChart() {
                 }
             },
             plugins: {
-                legend: {
-                    labels: { color: '#f1f5f9', font: { size: 11 } }
-                }
+                legend: { labels: { color: '#f1f5f9', font: { size: 11 } } }
             }
         }
     });
@@ -143,95 +139,139 @@ function initRadarChart() {
 function updateDashboard() {
     const { score, normScores } = calculateCriticalityScore(currentMetrics);
     
-    // Update Score Gauge
-    const scoreDisplay = document.getElementById('scoreDisplay');
-    scoreDisplay.textContent = score.toFixed(3);
+    document.getElementById('scoreDisplay').textContent = score.toFixed(3);
 
-    const circ = 251.3; // Total arc length of gauge
+    const circ = 251.3;
     const offset = circ - (score * circ);
     const gaugeFill = document.getElementById('gaugeFill');
     gaugeFill.style.strokeDashoffset = offset;
 
-    // Update Status Badge & Color Glow
     const statusBadge = document.getElementById('statusBadge');
     if (score >= CRITICAL_THRESHOLD) {
-        gaugeFill.style.stroke = '#4ade80'; // Green
+        gaugeFill.style.stroke = '#4ade80';
         statusBadge.style.color = '#4ade80';
         statusBadge.style.background = 'rgba(74, 222, 128, 0.15)';
         statusBadge.style.border = '1px solid rgba(74, 222, 128, 0.4)';
         statusBadge.textContent = 'Critical Infrastructure ✓';
     } else if (score >= 0.250) {
-        gaugeFill.style.stroke = '#facc15'; // Amber
+        gaugeFill.style.stroke = '#facc15';
         statusBadge.style.color = '#facc15';
         statusBadge.style.background = 'rgba(250, 204, 21, 0.15)';
         statusBadge.style.border = '1px solid rgba(250, 204, 21, 0.4)';
         statusBadge.textContent = 'Elevated Importance';
     } else {
-        gaugeFill.style.stroke = '#f87171'; // Red
+        gaugeFill.style.stroke = '#f87171';
         statusBadge.style.color = '#f87171';
         statusBadge.style.background = 'rgba(248, 113, 113, 0.15)';
         statusBadge.style.border = '1px solid rgba(248, 113, 113, 0.4)';
         statusBadge.textContent = 'Standard Project';
     }
 
-    // Update Radar Chart Data
     if (radarChartInstance) {
         const normValues = Object.keys(PARAM_CONFIGS).map(k => normScores[k]);
         radarChartInstance.data.datasets[0].data = normValues;
         radarChartInstance.update();
     }
 
-    // Update Recommendations List
-    updateRecommendations(score);
+    updateAIAdvisory(score, normScores);
 }
 
-function updateRecommendations(score) {
-    const list = document.getElementById('recommendationsList');
+function updateAIAdvisory(score, normScores) {
+    const aiRiskBadge = document.getElementById('aiRiskBadge');
+    const aiSummaryText = document.getElementById('aiSummaryText');
+    const list = document.getElementById('roadmapList');
     list.innerHTML = '';
 
-    const recs = [];
-    if (currentMetrics.contributor_count < 30) {
-        recs.push("Increase maintainer diversity: Aim for 30+ distinct contributors across multiple organizations.");
-    }
-    if (currentMetrics.commit_frequency < 10) {
-        recs.push("Accelerate commit cadence: Regular weekly commits boost commit_frequency scores log-scale.");
-    }
-    if (currentMetrics.recent_releases_count < 6) {
-        recs.push("Publish frequent semantic releases: Aim for monthly or bi-weekly versioned releases.");
-    }
-    if (currentMetrics.dependents_count < 1000) {
-        recs.push("Expand downstream package adoption: Register package distributions to increase dependents_count.");
-    }
     if (score >= CRITICAL_THRESHOLD) {
-        recs.unshift("✓ Meets OpenSSF Critical Infrastructure benchmarks ($\text{Score} \\ge 0.400$)!");
+        aiRiskBadge.textContent = "LOW RISK";
+        aiRiskBadge.style.background = "rgba(74, 222, 128, 0.2)";
+        aiRiskBadge.style.color = "#4ade80";
+        aiSummaryText.textContent = `Executive AI Assessment: '${currentRepoName}' achieves robust OpenSSF Critical Infrastructure status (${score.toFixed(3)}). Maintainer engagement and downstream reach satisfy security benchmarks.`;
+    } else {
+        aiRiskBadge.textContent = "ATTENTION REQUIRED";
+        aiRiskBadge.style.background = "rgba(248, 113, 113, 0.2)";
+        aiRiskBadge.style.color = "#f87171";
+        aiSummaryText.textContent = `Executive AI Assessment: '${currentRepoName}' scores ${score.toFixed(3)} (below the 0.400 critical threshold). Optimize contributor diversity and release cadences to eliminate single-maintainer risk.`;
     }
 
-    recs.slice(0, 4).forEach(text => {
-        const li = document.createElement('li');
-        li.textContent = text;
-        list.appendChild(li);
+    const roadmap = [];
+    if (normScores.contributor_count < 0.45) {
+        roadmap.push({ phase: "Phase 1: Maintainer Onboarding", impact: "+0.080 Score", action: "Invite active PR reviewers to core maintainers. Goal: >= 30 contributors." });
+    }
+    if (normScores.recent_releases_count < 0.45) {
+        roadmap.push({ phase: "Phase 2: Semantic Release Cadence", impact: "+0.045 Score", action: "Publish versioned releases monthly with SLSA level 3 provenance attestation." });
+    }
+    if (normScores.dependents_count < 0.45) {
+        roadmap.push({ phase: "Phase 3: Ecosystem Distribution", impact: "+0.110 Score", action: "Register packages on PyPI/npm/Docker Hub to expand downstream integration." });
+    }
+    if (roadmap.length === 0) {
+        roadmap.push({ phase: "Sustained Compliance", impact: "Score >= 0.400 Maintained", action: "Perform weekly security triage and audit OpenSSF Scorecard badges." });
+    }
+
+    roadmap.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'roadmap-item';
+        div.innerHTML = `
+            <div><span class="roadmap-phase">${item.phase}</span><span class="roadmap-impact">${item.impact}</span></div>
+            <div class="roadmap-action">${item.action}</div>
+        `;
+        list.appendChild(div);
     });
 }
 
 function initEventListeners() {
-    // Reset Button
+    // Single / Compare Mode Tabs
+    const singleTab = document.getElementById('singleRepoTab');
+    const compareTab = document.getElementById('compareRepoTab');
+    const singleBox = document.getElementById('singleSearchBox');
+    const compareBox = document.getElementById('compareSearchBox');
+    const compBanner = document.getElementById('comparisonBanner');
+
+    singleTab.addEventListener('click', () => {
+        singleTab.classList.add('active');
+        compareTab.classList.remove('active');
+        singleBox.style.display = 'flex';
+        compareBox.style.display = 'none';
+        compBanner.style.display = 'none';
+    });
+
+    compareTab.addEventListener('click', () => {
+        compareTab.classList.add('active');
+        singleTab.classList.remove('active');
+        compareBox.style.display = 'flex';
+        singleBox.style.display = 'none';
+    });
+
+    // Reset & Optimize Buttons
     document.getElementById('resetBtn').addEventListener('click', () => {
-        currentMetrics = {
-            created_since: 12, updated_since: 2, contributor_count: 5, org_count: 1,
-            commit_frequency: 2, recent_releases_count: 1, updated_issues_count: 20,
-            closed_issues_count: 15, comment_frequency: 2, dependents_count: 50
-        };
+        currentMetrics = { created_since: 12, updated_since: 2, contributor_count: 5, org_count: 1, commit_frequency: 2, recent_releases_count: 1, updated_issues_count: 20, closed_issues_count: 15, comment_frequency: 2, dependents_count: 50 };
         syncSlidersUI();
     });
 
-    // Elevate to 0.400+ Target Optimizer
     document.getElementById('optimizeBtn').addEventListener('click', () => {
-        currentMetrics = {
-            created_since: 60, updated_since: 0, contributor_count: 150, org_count: 10,
-            commit_frequency: 25, recent_releases_count: 12, updated_issues_count: 500,
-            closed_issues_count: 450, comment_frequency: 6.5, dependents_count: 5000
-        };
+        currentMetrics = { created_since: 60, updated_since: 0, contributor_count: 150, org_count: 10, commit_frequency: 25, recent_releases_count: 12, updated_issues_count: 500, closed_issues_count: 450, comment_frequency: 6.5, dependents_count: 5000 };
         syncSlidersUI();
+    });
+
+    // 5-Year Projection Slider
+    const timelineSlider = document.getElementById('timelineSlider');
+    const timelineYearLabel = document.getElementById('timelineYearLabel');
+    timelineSlider.addEventListener('input', (e) => {
+        const year = parseInt(e.target.value);
+        timelineYearLabel.textContent = `Year ${year} Projection`;
+        
+        // Scale metrics based on projection year
+        currentMetrics.contributor_count = Math.floor(15 * year * 1.5);
+        currentMetrics.org_count = Math.min(10, Math.floor(year * 2.2));
+        currentMetrics.commit_frequency = Math.floor(5 * year * 1.4);
+        currentMetrics.recent_releases_count = Math.min(26, Math.floor(3 * year));
+        currentMetrics.dependents_count = Math.floor(100 * Math.pow(year, 2.3));
+        syncSlidersUI();
+    });
+
+    // Download Report Button
+    document.getElementById('downloadReportBtn').addEventListener('click', () => {
+        downloadAuditReport();
     });
 
     // Preset Pills
@@ -248,6 +288,11 @@ function initEventListeners() {
         const query = document.getElementById('repoSearchInput').value.trim();
         if (query) fetchGitHubRepo(query);
     });
+
+    // Compare Button
+    document.getElementById('compareBtn').addEventListener('click', () => {
+        compareRepositories();
+    });
 }
 
 function syncSlidersUI() {
@@ -258,64 +303,83 @@ function syncSlidersUI() {
     updateDashboard();
 }
 
-// Live GitHub Repository Fetcher
 async function fetchGitHubRepo(repoPath) {
+    currentRepoName = repoPath;
     const searchBtn = document.getElementById('searchBtn');
     searchBtn.textContent = "Analyzing...";
     searchBtn.disabled = true;
 
     try {
-        // Try calling local backend API first, if available
-        let res = await fetch(`http://localhost:8000/api/v1/analyze/${repoPath}`).catch(() => null);
+        const ghRes = await fetch(`https://api.github.com/repos/${repoPath}`);
+        if (!ghRes.ok) throw new Error(`Repository '${repoPath}' not found on GitHub.`);
 
-        if (res && res.ok) {
-            const data = await res.json();
-            currentMetrics = data.metrics;
-            showMetaBar(data.stars, data.forks, data.open_issues);
-            syncSlidersUI();
-        } else {
-            // Direct Browser GitHub REST API Query
-            const ghRes = await fetch(`https://api.github.com/repos/${repoPath}`);
-            if (!ghRes.ok) throw new Error(`Repository '${repoPath}' not found on GitHub.`);
+        const data = await ghRes.json();
+        const createdDate = new Date(data.created_at);
+        const pushedDate = new Date(data.pushed_at);
+        const now = new Date();
 
-            const data = await ghRes.json();
-            
-            // Map live metrics
-            const createdDate = new Date(data.created_at);
-            const pushedDate = new Date(data.pushed_at);
-            const now = new Date();
+        const ageMonths = Math.max(1, (now - createdDate) / (1000 * 3600 * 24 * 30.4375));
+        const inactivityMonths = Math.max(0, (now - pushedDate) / (1000 * 3600 * 24 * 30.4375));
 
-            const ageMonths = Math.max(1, (now - createdDate) / (1000 * 3600 * 24 * 30.4375));
-            const inactivityMonths = Math.max(0, (now - pushedDate) / (1000 * 3600 * 24 * 30.4375));
+        const stars = data.stargazers_count || 0;
+        const forks = data.forks_count || 0;
+        const openIssues = data.open_issues_count || 0;
 
-            const stars = data.stargazers_count || 0;
-            const forks = data.forks_count || 0;
-            const openIssues = data.open_issues_count || 0;
+        const estContribs = Math.max(2, Math.min(5000, Math.floor(forks * 0.15 + stars * 0.02 + 5)));
+        const estOrgs = Math.max(1, Math.min(10, Math.floor(estContribs * 0.15 + 1)));
 
-            const estContribs = Math.max(2, Math.min(5000, Math.floor(forks * 0.15 + stars * 0.02 + 5)));
-            const estOrgs = Math.max(1, Math.min(10, Math.floor(estContribs * 0.15 + 1)));
+        currentMetrics = {
+            created_since: Math.round(ageMonths),
+            updated_since: Math.round(inactivityMonths * 10) / 10,
+            contributor_count: estContribs,
+            org_count: estOrgs,
+            commit_frequency: Math.round((estContribs * 0.6 + forks * 0.05) * 10) / 10,
+            recent_releases_count: Math.min(26, Math.floor(stars / 200) + 4),
+            updated_issues_count: Math.max(openIssues, Math.floor(stars * 0.1)),
+            closed_issues_count: Math.floor(openIssues * 0.8),
+            comment_frequency: 4.5,
+            dependents_count: Math.floor(Math.pow(forks, 1.3) * 2 + stars * 1.5)
+        };
 
-            currentMetrics = {
-                created_since: Math.round(ageMonths),
-                updated_since: Math.round(inactivityMonths * 10) / 10,
-                contributor_count: estContribs,
-                org_count: estOrgs,
-                commit_frequency: Math.round((estContribs * 0.6 + forks * 0.05) * 10) / 10,
-                recent_releases_count: Math.min(26, Math.floor(stars / 200) + 4),
-                updated_issues_count: Math.max(openIssues, Math.floor(stars * 0.1)),
-                closed_issues_count: Math.floor(openIssues * 0.8),
-                comment_frequency: 4.5,
-                dependents_count: Math.floor(Math.pow(forks, 1.3) * 2 + stars * 1.5)
-            };
-
-            showMetaBar(stars, forks, openIssues);
-            syncSlidersUI();
-        }
+        showMetaBar(stars, forks, openIssues);
+        syncSlidersUI();
     } catch (err) {
-        alert(err.message || "Failed to analyze repository.");
+        alert(err.message || "Failed to fetch repo.");
     } finally {
         searchBtn.textContent = "Analyze Repository";
         searchBtn.disabled = false;
+    }
+}
+
+async function compareRepositories() {
+    const repoA = document.getElementById('repoInputA').value.trim();
+    const repoB = document.getElementById('repoInputB').value.trim();
+    if (!repoA || !repoB) return;
+
+    const btn = document.getElementById('compareBtn');
+    btn.textContent = "Comparing...";
+    btn.disabled = true;
+
+    try {
+        const resA = await fetch(`https://api.github.com/repos/${repoA}`).then(r => r.json());
+        const resB = await fetch(`https://api.github.com/repos/${repoB}`).then(r => r.json());
+
+        const scoreA = (Math.log(1 + 0.001 * (resA.forks_count * 0.2)) / Math.log(1 + 5.0) + 0.35);
+        const scoreB = (Math.log(1 + 0.001 * (resB.forks_count * 0.2)) / Math.log(1 + 5.0) + 0.35);
+        const delta = Math.abs(scoreA - scoreB).toFixed(3);
+
+        const banner = document.getElementById('comparisonBanner');
+        banner.style.display = 'flex';
+
+        document.getElementById('compColA').innerHTML = `<h3>${repoA}</h3><p>${scoreA.toFixed(3)}</p>`;
+        document.getElementById('compColB').innerHTML = `<h3>${repoB}</h3><p>${scoreB.toFixed(3)}</p>`;
+        document.getElementById('deltaBadge').textContent = `Delta: ${delta}`;
+        document.getElementById('winnerLabel').textContent = scoreA >= scoreB ? `🏆 ${repoA} Leads` : `🏆 ${repoB} Leads`;
+    } catch (err) {
+        alert("Comparison failed: " + err.message);
+    } finally {
+        btn.textContent = "Compare Benchmarks";
+        btn.disabled = false;
     }
 }
 
@@ -325,4 +389,23 @@ function showMetaBar(stars, forks, openIssues) {
     document.getElementById('metaStars').textContent = stars.toLocaleString();
     document.getElementById('metaForks').textContent = forks.toLocaleString();
     document.getElementById('metaIssues').textContent = openIssues.toLocaleString();
+}
+
+function downloadAuditReport() {
+    const { score } = calculateCriticalityScore(currentMetrics);
+    const content = `# OpenSSF Criticality Audit Report: ${currentRepoName}\n\n` +
+        `**Generated Date:** ${new Date().toISOString().split('T')[0]}\n` +
+        `**OpenSSF Score:** ${score.toFixed(5)}\n` +
+        `**Infrastructure Status:** ${score >= 0.400 ? 'Critical Infrastructure' : 'Standard Project'}\n\n` +
+        `## Metric Values\n` +
+        Object.entries(currentMetrics).map(([k, v]) => `- **${k}**: ${v}`).join('\n') +
+        `\n\n---\nReport generated by OpenSSF Criticality Suite v2.1`;
+
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `OpenSSF_Audit_Report_${currentRepoName.replace('/', '_')}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
 }

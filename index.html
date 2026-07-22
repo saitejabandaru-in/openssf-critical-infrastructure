@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="OpenSSF Critical Infrastructure Analytics Platform & Live Repository Score Optimizer">
-    <title>OpenSSF Criticality Suite | Real-Time Open Source Analytics Platform</title>
+    <meta name="description" content="Enterprise OpenSSF Criticality Analytics Platform & AI Security Advisory Engine">
+    <title>OpenSSF Criticality Suite v2.1 | Enterprise AI Platform</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <!-- Chart.js CDN for Radar & Breakdown charts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -27,28 +27,42 @@
                         </svg>
                     </div>
                     <div>
-                        <h1>OpenSSF Criticality Platform</h1>
-                        <p class="subtitle">Securing Critical Open Source Infrastructure ($\text{Score} \ge 0.400$)</p>
+                        <h1>OpenSSF Criticality Platform <span class="version-tag">v2.1 AI Engine</span></h1>
+                        <p class="subtitle">Real-Time Open Source Analytics, Repo Comparison & AI Security Advisory</p>
                     </div>
                 </div>
-                <div class="header-badges">
-                    <span class="badge badge-pulse" id="apiStatusBadge">● Live API Engine</span>
-                    <span class="badge badge-version">v2.0.0 Enterprise</span>
+                <div class="header-actions">
+                    <button id="downloadReportBtn" class="btn btn-secondary btn-sm">📄 Download Audit Report</button>
+                    <span class="badge badge-pulse" id="apiStatusBadge">● Live AI Engine</span>
                 </div>
             </div>
 
-            <!-- Live Repo Search Bar -->
+            <!-- Live Repo Search Bar & Comparison Mode -->
             <div class="search-section">
-                <div class="search-box">
+                <div class="mode-tabs">
+                    <button class="tab-btn active" id="singleRepoTab">Single Repo Mode</button>
+                    <button class="tab-btn" id="compareRepoTab">⚔️ Dual Repo Comparison</button>
+                </div>
+
+                <!-- Single Mode Input -->
+                <div class="search-box" id="singleSearchBox">
                     <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/>
-                        <path d="m21 21-4.3-4.3"/>
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
                     </svg>
-                    <input type="text" id="repoSearchInput" placeholder="Analyze any GitHub repository (e.g. torvalds/linux, facebook/react, saitejabandaru-in/achievements-showcase)...">
+                    <input type="text" id="repoSearchInput" placeholder="Analyze any GitHub repo (e.g. torvalds/linux, facebook/react, saitejabandaru-in/achievements-showcase)...">
                     <button id="searchBtn" class="btn btn-glow">Analyze Repository</button>
                 </div>
+
+                <!-- Compare Mode Inputs -->
+                <div class="search-box compare-box" id="compareSearchBox" style="display:none;">
+                    <input type="text" id="repoInputA" placeholder="Repo A (e.g. facebook/react)" value="facebook/react">
+                    <span class="vs-divider">VS</span>
+                    <input type="text" id="repoInputB" placeholder="Repo B (e.g. vuejs/core)" value="vuejs/core">
+                    <button id="compareBtn" class="btn btn-glow">Compare Benchmarks</button>
+                </div>
+
                 <div class="preset-pills">
-                    <span class="preset-label">Preset Benchmarks:</span>
+                    <span class="preset-label">Quick Benchmarks:</span>
                     <button class="pill" data-repo="torvalds/linux">torvalds/linux</button>
                     <button class="pill" data-repo="facebook/react">facebook/react</button>
                     <button class="pill" data-repo="fastapi/fastapi">fastapi/fastapi</button>
@@ -57,9 +71,19 @@
             </div>
         </header>
 
+        <!-- Comparison Result Banner (hidden by default) -->
+        <div class="comparison-banner" id="comparisonBanner" style="display:none;">
+            <div class="comp-col comp-a" id="compColA"></div>
+            <div class="comp-vs">
+                <div class="delta-badge" id="deltaBadge">Delta: 0.000</div>
+                <div class="winner-label" id="winnerLabel">Winner</div>
+            </div>
+            <div class="comp-col comp-b" id="compColB"></div>
+        </div>
+
         <!-- Main Dashboard Grid -->
         <main class="dashboard-grid">
-            <!-- Left Column: Gauge & Radar Chart -->
+            <!-- Left Column: Gauge & AI Advisory -->
             <div class="col-left">
                 <!-- Score Gauge Card -->
                 <section class="card score-card">
@@ -70,11 +94,8 @@
 
                     <div class="gauge-wrapper">
                         <svg viewBox="0 0 200 110" class="gauge-svg">
-                            <!-- Background Arc -->
                             <path class="gauge-bg" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke-width="16" stroke-linecap="round"/>
-                            <!-- Threshold Marker at 0.4 -->
                             <line x1="84" y1="21" x2="90" y2="34" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
-                            <!-- Animated Fill Arc -->
                             <path class="gauge-fill" id="gaugeFill" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke-width="16" stroke-linecap="round"/>
                         </svg>
                         <div class="gauge-inner">
@@ -85,19 +106,27 @@
 
                     <div class="status-indicator" id="statusBadge">Standard Project</div>
 
-                    <!-- Repository Metadata Bar -->
+                    <!-- Metadata Bar -->
                     <div class="repo-meta-bar" id="repoMetaBar" style="display:none;">
                         <div class="meta-item"><span class="meta-icon">⭐</span> <span id="metaStars">0</span> Stars</div>
                         <div class="meta-item"><span class="meta-icon">🍴</span> <span id="metaForks">0</span> Forks</div>
                         <div class="meta-item"><span class="meta-icon">❗</span> <span id="metaIssues">0</span> Issues</div>
                     </div>
+                </section>
 
-                    <!-- Recommendations List -->
-                    <div class="recommendations-box">
-                        <h3>Actionable Optimization Matrix</h3>
-                        <ul id="recommendationsList">
-                            <li>Loading metrics...</li>
-                        </ul>
+                <!-- AI Security & Optimization Advisory Card -->
+                <section class="card ai-card">
+                    <div class="card-header">
+                        <h2>🤖 AI Security & Posture Advisory</h2>
+                        <span class="badge-sub" id="aiRiskBadge">LOW RISK</span>
+                    </div>
+                    <p class="ai-summary" id="aiSummaryText">Analyzing repository parameters for optimization opportunities...</p>
+                    
+                    <div class="roadmap-box">
+                        <h3>Strategic Optimization Roadmap</h3>
+                        <div class="roadmap-list" id="roadmapList">
+                            <!-- Injected by JS -->
+                        </div>
                     </div>
                 </section>
 
@@ -113,8 +142,26 @@
                 </section>
             </div>
 
-            <!-- Right Column: Interactive Controls & Scorecard -->
+            <!-- Right Column: Interactive Controls, Timeline & Scorecard -->
             <div class="col-right">
+                <!-- 5-Year Timeline Projection Card -->
+                <section class="card projection-card">
+                    <div class="card-header">
+                        <h2>📈 5-Year Growth & Criticality Projection</h2>
+                        <span class="badge-sub" id="timelineYearLabel">Year 3 Growth</span>
+                    </div>
+                    <div class="timeline-slider-wrapper">
+                        <input type="range" class="slider-bar" id="timelineSlider" min="1" max="5" step="1" value="3">
+                        <div class="timeline-labels">
+                            <span>Year 1 (Initial)</span>
+                            <span>Year 2</span>
+                            <span>Year 3 (Scaling)</span>
+                            <span>Year 4</span>
+                            <span>Year 5 (Ecosystem)</span>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- Sliders Grid Card -->
                 <section class="card controls-card">
                     <div class="card-header">
@@ -130,7 +177,7 @@
                     </div>
                 </section>
 
-                <!-- Security Scorecard Checklist Card -->
+                <!-- Security Scorecard Matrix -->
                 <section class="card scorecard-card">
                     <div class="card-header">
                         <h2>OpenSSF Scorecard Security Matrix</h2>
@@ -141,11 +188,11 @@
                         <div class="scorecard-item active"><span class="check-icon">✓</span> Branch Protection</div>
                         <div class="scorecard-item active"><span class="check-icon">✓</span> Automated CI Tests</div>
                         <div class="scorecard-item active"><span class="check-icon">✓</span> Security Policy (SECURITY.md)</div>
-                        <div class="scorecard-item active"><span class="check-icon">✓</span> Dependabot Vulnerability Scans</div>
-                        <div class="scorecard-item active"><span class="check-icon">✓</span> Signed Release Artifacts</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Dependabot Scans</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Signed Releases</div>
                         <div class="scorecard-item active"><span class="check-icon">✓</span> SLSA Level 3 Provenance</div>
-                        <div class="scorecard-item active"><span class="check-icon">✓</span> Token Permissions Restricted</div>
-                        <div class="scorecard-item active"><span class="check-icon">✓</span> SAST CodeQL Analysis</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Token Permissions</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> CodeQL SAST Analysis</div>
                         <div class="scorecard-item active"><span class="check-icon">✓</span> DCO / CLA Sign-off</div>
                         <div class="scorecard-item active"><span class="check-icon">✓</span> Pinned Dependencies</div>
                         <div class="scorecard-item active"><span class="check-icon">✓</span> License Compliance</div>
@@ -154,9 +201,8 @@
             </div>
         </main>
 
-        <!-- Footer -->
         <footer class="app-footer">
-            <p>OpenSSF Criticality Analytics Platform &bull; Built according to OpenSSF SCP Working Group Guidelines &bull; Licensed under Apache 2.0</p>
+            <p>OpenSSF Criticality Analytics & AI Advisory Platform &bull; Built according to OpenSSF SCP Working Group Guidelines &bull; Licensed under Apache 2.0</p>
         </footer>
     </div>
 

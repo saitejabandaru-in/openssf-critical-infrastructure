@@ -1,4 +1,4 @@
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 from pydantic import BaseModel, Field
 
 class CriticalityMetrics(BaseModel):
@@ -36,3 +36,13 @@ class RepoAnalysisResponse(BaseModel):
     stars: int
     forks: int
     open_issues: int
+
+class RepoComparisonRequest(BaseModel):
+    repo_a: str = Field(..., description="First repository in owner/name format")
+    repo_b: str = Field(..., description="Second repository in owner/name format")
+
+class RepoComparisonResponse(BaseModel):
+    repo_a: RepoAnalysisResponse
+    repo_b: RepoAnalysisResponse
+    score_delta: float
+    winner: str

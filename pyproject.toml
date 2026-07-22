@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openssf-criticality"
+version = "2.1.0"
+authors = [
+  { name="Sai Teja Bandaru", email="saitejabandaru.ds@gmail.com" },
+]
+description = "Enterprise OpenSSF Criticality Score Engine, Real-time Analytics Platform & AI Security Advisor"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Security",
+    "Topic :: Software Development :: Quality Assurance"
+]
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.28.0",
+    "httpx>=0.27.0",
+    "pydantic>=2.6.0"
+]
+
+[project.scripts]
+openssf-criticality = "criticality_calculator:main"
+openssf-server = "backend.main:main"

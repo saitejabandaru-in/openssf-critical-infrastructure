@@ -1,11 +1,12 @@
 # OpenSSF Criticality Platform & Real-Time Analytics Engine 🚀
 
-![OpenSSF Score](https://img.shields.io/badge/OpenSSF_Criticality-0.415-4ade80?style=for-the-badge&logo=github)
+[![Live Web Application](https://img.shields.io/badge/Live_Web_App-OpenSSF_Platform-4ade80?style=for-the-badge&logo=githubpages&logoColor=white)](https://saitejabandaru-in.github.io/openssf-critical-infrastructure/)
+![OpenSSF Score](https://img.shields.io/badge/OpenSSF_Criticality-0.415-38bdf8?style=for-the-badge&logo=github)
 ![Build Status](https://img.shields.io/badge/Build-Passing-38bdf8?style=for-the-badge&logo=githubactions)
 ![License](https://img.shields.io/badge/License-Apache_2.0-c084fc?style=for-the-badge)
-![FastAPI](https://img.shields.io/badge/FastAPI-v2.0.0-009688?style=for-the-badge&logo=fastapi)
-![Docker Ready](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker)
+![FastAPI](https://img.shields.io/badge/FastAPI-v2.1.0-009688?style=for-the-badge&logo=fastapi)
 
+> **🌐 Live Web Application:** **[https://saitejabandaru-in.github.io/openssf-critical-infrastructure/](https://saitejabandaru-in.github.io/openssf-critical-infrastructure/)**  
 > An enterprise-grade, real-time analytics platform and reference repository designed around the official **OpenSSF Criticality Score algorithm** ($\text{Target Score} \ge 0.400$).
 
 ---
@@ -70,21 +71,21 @@ $$\text{Criticality Score} = \frac{\sum_{i=1}^{n} w_i \cdot S_i}{\sum_{i=1}^{n} 
 
 ## 🚀 Quickstart
 
-### 1. Launch with Docker Compose (Recommended)
+### 1. Live Web Application
+Visit **[https://saitejabandaru-in.github.io/openssf-critical-infrastructure/](https://saitejabandaru-in.github.io/openssf-critical-infrastructure/)** to use the interactive dashboard directly in your browser with zero setup required!
+
+### 2. Launch with Docker Compose
 ```bash
 docker-compose up -d --build
 # Open http://localhost:8000 in your browser
 ```
 
-### 2. Local Python Dev Server
+### 3. Local Python Dev Server
 ```bash
 pip install -r backend/requirements.txt
 make run
 # Server active at http://localhost:8000 (OpenAPI Docs at http://localhost:8000/docs)
 ```
-
-### 3. Open Dashboard Directly in Browser
-Double-click `index.html` or open it in any modern web browser!
 
 ---
 

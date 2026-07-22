@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="OpenSSF Critical Infrastructure Analytics Platform & Live Repository Score Optimizer">
+    <title>OpenSSF Criticality Suite | Real-Time Open Source Analytics Platform</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN for Radar & Breakdown charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="ambient-background"></div>
+
+    <div class="glass-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="brand">
+                    <div class="brand-logo">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h1>OpenSSF Criticality Platform</h1>
+                        <p class="subtitle">Securing Critical Open Source Infrastructure ($\text{Score} \ge 0.400$)</p>
+                    </div>
+                </div>
+                <div class="header-badges">
+                    <span class="badge badge-pulse" id="apiStatusBadge">● Live API Engine</span>
+                    <span class="badge badge-version">v2.0.0 Enterprise</span>
+                </div>
+            </div>
+
+            <!-- Live Repo Search Bar -->
+            <div class="search-section">
+                <div class="search-box">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.3-4.3"/>
+                    </svg>
+                    <input type="text" id="repoSearchInput" placeholder="Analyze any GitHub repository (e.g. torvalds/linux, facebook/react, saitejabandaru-in/achievements-showcase)...">
+                    <button id="searchBtn" class="btn btn-glow">Analyze Repository</button>
+                </div>
+                <div class="preset-pills">
+                    <span class="preset-label">Preset Benchmarks:</span>
+                    <button class="pill" data-repo="torvalds/linux">torvalds/linux</button>
+                    <button class="pill" data-repo="facebook/react">facebook/react</button>
+                    <button class="pill" data-repo="fastapi/fastapi">fastapi/fastapi</button>
+                    <button class="pill" data-repo="kubernetes/kubernetes">kubernetes/kubernetes</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Grid -->
+        <main class="dashboard-grid">
+            <!-- Left Column: Gauge & Radar Chart -->
+            <div class="col-left">
+                <!-- Score Gauge Card -->
+                <section class="card score-card">
+                    <div class="card-header">
+                        <h2>OpenSSF Criticality Score</h2>
+                        <span class="info-icon" title="Calculated using the OpenSSF Securing Critical Projects Working Group logarithmic metric algorithm">ⓘ</span>
+                    </div>
+
+                    <div class="gauge-wrapper">
+                        <svg viewBox="0 0 200 110" class="gauge-svg">
+                            <!-- Background Arc -->
+                            <path class="gauge-bg" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke-width="16" stroke-linecap="round"/>
+                            <!-- Threshold Marker at 0.4 -->
+                            <line x1="84" y1="21" x2="90" y2="34" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+                            <!-- Animated Fill Arc -->
+                            <path class="gauge-fill" id="gaugeFill" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke-width="16" stroke-linecap="round"/>
+                        </svg>
+                        <div class="gauge-inner">
+                            <div class="gauge-value" id="scoreDisplay">0.000</div>
+                            <div class="gauge-target">Target $\ge 0.400$</div>
+                        </div>
+                    </div>
+
+                    <div class="status-indicator" id="statusBadge">Standard Project</div>
+
+                    <!-- Repository Metadata Bar -->
+                    <div class="repo-meta-bar" id="repoMetaBar" style="display:none;">
+                        <div class="meta-item"><span class="meta-icon">⭐</span> <span id="metaStars">0</span> Stars</div>
+                        <div class="meta-item"><span class="meta-icon">🍴</span> <span id="metaForks">0</span> Forks</div>
+                        <div class="meta-item"><span class="meta-icon">❗</span> <span id="metaIssues">0</span> Issues</div>
+                    </div>
+
+                    <!-- Recommendations List -->
+                    <div class="recommendations-box">
+                        <h3>Actionable Optimization Matrix</h3>
+                        <ul id="recommendationsList">
+                            <li>Loading metrics...</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Radar Chart Card -->
+                <section class="card chart-card">
+                    <div class="card-header">
+                        <h2>Metric Radar Profile</h2>
+                        <span class="badge-sub">Vs. Critical Baseline</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column: Interactive Controls & Scorecard -->
+            <div class="col-right">
+                <!-- Sliders Grid Card -->
+                <section class="card controls-card">
+                    <div class="card-header">
+                        <h2>OpenSSF 10-Parameter Model</h2>
+                        <div class="btn-group">
+                            <button id="resetBtn" class="btn btn-secondary">Reset Base</button>
+                            <button id="optimizeBtn" class="btn btn-primary">⚡ Elevate to 0.400+</button>
+                        </div>
+                    </div>
+
+                    <div class="sliders-grid" id="slidersContainer">
+                        <!-- Dynamically populated sliders -->
+                    </div>
+                </section>
+
+                <!-- Security Scorecard Checklist Card -->
+                <section class="card scorecard-card">
+                    <div class="card-header">
+                        <h2>OpenSSF Scorecard Security Matrix</h2>
+                        <span class="badge-sub">16 Supply-Chain Checks</span>
+                    </div>
+                    <div class="scorecard-grid">
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Code-Review Enforced</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Branch Protection</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Automated CI Tests</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Security Policy (SECURITY.md)</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Dependabot Vulnerability Scans</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Signed Release Artifacts</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> SLSA Level 3 Provenance</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Token Permissions Restricted</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> SAST CodeQL Analysis</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> DCO / CLA Sign-off</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> Pinned Dependencies</div>
+                        <div class="scorecard-item active"><span class="check-icon">✓</span> License Compliance</div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <p>OpenSSF Criticality Analytics Platform &bull; Built according to OpenSSF SCP Working Group Guidelines &bull; Licensed under Apache 2.0</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

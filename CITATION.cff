@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Bandaru"
+    given-names: "Sai Teja"
+    orcid: "https://orcid.org/0009-0006-7797-2635"
+title: "OpenSSF Critical Infrastructure & Analytics Suite"
+version: 1.0.0
+date-released: 2026-07-22
+url: "https://github.com/saitejabandaru-in/openssf-critical-infrastructure"
+license: Apache-2.0

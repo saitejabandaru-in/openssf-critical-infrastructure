@@ -1,0 +1,26 @@
+name: Continuous Integration
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check code formatting
+        run: |
+          pip install ruff
+          ruff check .
+      - name: Run Tests
+        run: |
+          python3 criticality_calculator.py --demo

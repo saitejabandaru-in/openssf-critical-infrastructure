@@ -12,6 +12,30 @@
     --glass-blur: blur(16px);
 }
 
+[data-theme="cyberpunk"] {
+    --bg-dark: #0d0221;
+    --card-bg: rgba(26, 5, 48, 0.75);
+    --card-border: rgba(255, 0, 127, 0.25);
+    --accent-blue: #00f0ff;
+    --accent-purple: #ff007f;
+    --success-green: #39ff14;
+    --warning-yellow: #ffb703;
+    --text-main: #ffffff;
+    --text-muted: #d8b4fe;
+}
+
+[data-theme="emerald"] {
+    --bg-dark: #022c22;
+    --card-bg: rgba(6, 78, 59, 0.65);
+    --card-border: rgba(52, 211, 153, 0.2);
+    --accent-blue: #2dd4bf;
+    --accent-purple: #34d399;
+    --success-green: #10b981;
+    --warning-yellow: #f59e0b;
+    --text-main: #ecfdf5;
+    --text-muted: #6ee7b7;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -20,6 +44,7 @@ body {
     color: var(--text-main);
     min-height: 100vh;
     overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 .ambient-background {
@@ -71,7 +96,7 @@ body {
 }
 .brand h1 {
     font-size: 1.7rem; font-weight: 700;
-    background: linear-gradient(90deg, #fff, #cbd5e1);
+    background: linear-gradient(90deg, #fff, var(--text-muted));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -86,7 +111,11 @@ body {
 }
 
 .subtitle { font-size: 0.95rem; color: var(--text-muted); }
-.header-actions { display: flex; align-items: center; gap: 0.8rem; }
+.header-actions { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+
+.theme-picker { display: flex; gap: 0.3rem; background: rgba(0,0,0,0.3); padding: 0.2rem; border-radius: 20px; border: 1px solid var(--card-border); }
+.theme-btn { background: transparent; border: none; font-size: 1rem; padding: 0.3rem 0.5rem; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
+.theme-btn.active { background: rgba(255,255,255,0.2); }
 
 .badge {
     padding: 0.4rem 0.9rem; border-radius: 20px;
@@ -231,143 +260,44 @@ body {
 
 .app-footer { text-align: center; font-size: 0.8rem; color: var(--text-muted); padding: 1.5rem 0; border-top: 1px solid var(--card-border); }
 
-/* ===================================================== */
-/* RESPONSIVE MEDIA QUERIES FOR ALL MOBILE & TABLET DEVICES */
-/* ===================================================== */
-
+/* RESPONSIVE MEDIA QUERIES */
 @media (max-width: 1024px) {
-    .glass-container {
-        width: 95%;
-        margin: 1.2rem auto;
-        gap: 1.2rem;
-    }
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-        gap: 1.4rem;
-    }
+    .glass-container { width: 95%; margin: 1.2rem auto; gap: 1.2rem; }
+    .dashboard-grid { grid-template-columns: 1fr; gap: 1.4rem; }
 }
 
 @media (max-width: 768px) {
-    .glass-container {
-        width: 98%;
-        margin: 0.5rem auto;
-        padding: 0;
-    }
-    .app-header {
-        padding: 1.2rem 1rem;
-        border-radius: 14px;
-    }
-    .header-content {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.8rem;
-    }
-    .brand h1 {
-        font-size: 1.35rem;
-    }
-    .subtitle {
-        font-size: 0.85rem;
-    }
-    .header-actions {
-        width: 100%;
-        justify-content: space-between;
-    }
-    .search-box {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.6rem;
-        padding: 0.8rem;
-    }
-    .search-box input {
-        width: 100%;
-        font-size: 0.95rem;
-        padding: 0.4rem 0;
-    }
-    .search-icon {
-        display: none;
-    }
-    .btn-glow {
-        width: 100%;
-        text-align: center;
-    }
-    .compare-box {
-        flex-direction: column;
-    }
-    .vs-divider {
-        text-align: center;
-    }
-    .card {
-        padding: 1.2rem;
-        border-radius: 14px;
-    }
-    .card-header {
-        flex-wrap: wrap;
-        gap: 0.5rem;
-    }
-    .card-header h2 {
-        font-size: 1.05rem;
-    }
-    .sliders-grid {
-        grid-template-columns: 1fr;
-    }
-    .scorecard-grid {
-        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-        gap: 0.5rem;
-    }
-    .scorecard-item {
-        font-size: 0.78rem;
-        padding: 0.5rem;
-    }
-    .timeline-labels {
-        font-size: 0.65rem;
-    }
-    .btn-group {
-        width: 100%;
-        justify-content: space-between;
-    }
-    .btn-group .btn {
-        flex: 1;
-        text-align: center;
-        padding: 0.5rem 0.6rem;
-        font-size: 0.8rem;
-    }
-    .gauge-wrapper {
-        width: 220px;
-        height: 120px;
-    }
-    .gauge-value {
-        font-size: 2.2rem;
-    }
-    .chart-container {
-        height: 230px;
-    }
-    .comparison-banner {
-        flex-direction: column;
-        gap: 0.8rem;
-        text-align: center;
-        padding: 1rem;
-    }
+    .glass-container { width: 98%; margin: 0.5rem auto; padding: 0; }
+    .app-header { padding: 1.2rem 1rem; border-radius: 14px; }
+    .header-content { flex-direction: column; align-items: flex-start; gap: 0.8rem; }
+    .brand h1 { font-size: 1.35rem; }
+    .subtitle { font-size: 0.85rem; }
+    .header-actions { width: 100%; justify-content: space-between; }
+    .search-box { flex-direction: column; align-items: stretch; gap: 0.6rem; padding: 0.8rem; }
+    .search-box input { width: 100%; font-size: 0.95rem; padding: 0.4rem 0; }
+    .search-icon { display: none; }
+    .btn-glow { width: 100%; text-align: center; }
+    .compare-box { flex-direction: column; }
+    .vs-divider { text-align: center; }
+    .card { padding: 1.2rem; border-radius: 14px; }
+    .card-header { flex-wrap: wrap; gap: 0.5rem; }
+    .card-header h2 { font-size: 1.05rem; }
+    .sliders-grid { grid-template-columns: 1fr; }
+    .scorecard-grid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.5rem; }
+    .scorecard-item { font-size: 0.78rem; padding: 0.5rem; }
+    .timeline-labels { font-size: 0.65rem; }
+    .btn-group { width: 100%; justify-content: space-between; }
+    .btn-group .btn { flex: 1; text-align: center; padding: 0.5rem 0.6rem; font-size: 0.8rem; }
+    .gauge-wrapper { width: 220px; height: 120px; }
+    .gauge-value { font-size: 2.2rem; }
+    .chart-container { height: 230px; }
+    .comparison-banner { flex-direction: column; gap: 0.8rem; text-align: center; padding: 1rem; }
 }
 
 @media (max-width: 480px) {
-    .brand-logo {
-        width: 42px;
-        height: 42px;
-    }
-    .brand h1 {
-        font-size: 1.2rem;
-    }
-    .mode-tabs {
-        width: 100%;
-    }
-    .tab-btn {
-        flex: 1;
-        text-align: center;
-        padding: 0.4rem 0.5rem;
-        font-size: 0.78rem;
-    }
-    .slider-bar::-webkit-slider-thumb {
-        width: 22px;
-        height: 22px;
-    }
+    .brand-logo { width: 42px; height: 42px; }
+    .brand h1 { font-size: 1.2rem; }
+    .mode-tabs { width: 100%; }
+    .tab-btn { flex: 1; text-align: center; padding: 0.4rem 0.5rem; font-size: 0.78rem; }
+    .slider-bar::-webkit-slider-thumb { width: 22px; height: 22px; }
 }

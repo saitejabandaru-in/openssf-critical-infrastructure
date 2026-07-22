@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Enterprise OpenSSF Criticality Analytics Platform & AI Security Advisory Engine">
-    <title>OpenSSF Criticality Suite v2.1 | Enterprise AI Platform</title>
+    <meta name="description" content="Enterprise OpenSSF Critical Infrastructure Analytics Platform & AI Security Advisory Engine">
+    <title>OpenSSF Criticality Suite v2.2 | Enterprise Flagship Platform</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,12 +27,20 @@
                         </svg>
                     </div>
                     <div>
-                        <h1>OpenSSF Criticality Platform <span class="version-tag">v2.1 AI Engine</span></h1>
-                        <p class="subtitle">Real-Time Open Source Analytics, Repo Comparison & AI Security Advisory</p>
+                        <h1>OpenSSF Criticality Platform <span class="version-tag">v2.2 Enterprise Flagship</span></h1>
+                        <p class="subtitle">Real-Time Open Source Analytics, Multi-Repo Comparison & AI Security Advisory</p>
                     </div>
                 </div>
                 <div class="header-actions">
-                    <button id="downloadReportBtn" class="btn btn-secondary btn-sm">📄 Download Audit Report</button>
+                    <!-- Theme Selector -->
+                    <div class="theme-picker">
+                        <button class="theme-btn active" data-theme="dark" title="Dark Glass Theme">🌙</button>
+                        <button class="theme-btn" data-theme="cyberpunk" title="Cyberpunk Theme">⚡</button>
+                        <button class="theme-btn" data-theme="emerald" title="Security Emerald Theme">🛡️</button>
+                    </div>
+                    <!-- Export Dropdown / Buttons -->
+                    <button id="downloadReportBtn" class="btn btn-secondary btn-sm">📄 Export MD Report</button>
+                    <button id="downloadJsonBtn" class="btn btn-secondary btn-sm">💾 Export JSON</button>
                     <span class="badge badge-pulse" id="apiStatusBadge">● Live AI Engine</span>
                 </div>
             </div>
@@ -71,7 +79,7 @@
             </div>
         </header>
 
-        <!-- Comparison Result Banner (hidden by default) -->
+        <!-- Comparison Result Banner -->
         <div class="comparison-banner" id="comparisonBanner" style="display:none;">
             <div class="comp-col comp-a" id="compColA"></div>
             <div class="comp-vs">
@@ -83,7 +91,7 @@
 
         <!-- Main Dashboard Grid -->
         <main class="dashboard-grid">
-            <!-- Left Column: Gauge & AI Advisory -->
+            <!-- Left Column -->
             <div class="col-left">
                 <!-- Score Gauge Card -->
                 <section class="card score-card">
@@ -142,7 +150,7 @@
                 </section>
             </div>
 
-            <!-- Right Column: Interactive Controls, Timeline & Scorecard -->
+            <!-- Right Column -->
             <div class="col-right">
                 <!-- 5-Year Timeline Projection Card -->
                 <section class="card projection-card">
